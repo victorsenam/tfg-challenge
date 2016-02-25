@@ -29,7 +29,7 @@ Game.initialize = function () {
 
   this.speed = 10;
   this.state = "Running";
-  this.score = 0;
+  this.score = 1000000;
   this.ticks = 0;
 
   Enemies.initialize();
@@ -57,7 +57,7 @@ Game.update = function () {
     Enemies.update(Game);
     Player.update(Game, Enemies.list);
 
-    if (Math.random() < 0.02)
+    if (Math.random() < 0.05)
       Enemies.generate(Game);
 
     if ((this.ticks%90) == 0)

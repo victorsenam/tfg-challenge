@@ -87,8 +87,10 @@ Enemies.generate = function (game) {
 
   if (rand < 0.75)
     type = "Car";
-  else if (rand < 1)
+  else if (rand < 0.9)
     type = "Oil";
+  else
+    type = "Hole";
   // TODO: other tipes of enemies
 
   var enemy = Enemies.build(type, tile, game);
