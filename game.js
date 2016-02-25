@@ -2,7 +2,7 @@ var Game = {};
 
 Game.fps = 30;
 Game.speed = 10;
-Game.tiles = 3;
+Game.tiles = 4;
 
 Game.initialize = function() {
   this.canvas = document.getElementById("canvas");
@@ -18,8 +18,13 @@ Game.draw = function() {
   this.context.clearRect(0, 0, this.width, this.height);
 
   Player.draw(Game);
+  Enemies.draw(Game);
 };
 
 Game.update = function() {
   Player.update(Game);
+  Enemies.update(Game);
+
+  if (Math.random() < 0.02)
+    Enemies.generate(Game);
 };

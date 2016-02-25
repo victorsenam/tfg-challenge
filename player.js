@@ -19,11 +19,12 @@ Player.keyboardListener = function(value) {
 };
 
 Player.initialize = function(x, game) {
+  this.width = 0.8*(game.width/game.tiles);
+  this.height = 1.2*this.width;
+  this.style = "rgb(0,0,0)";
+
   this.x = x - this.width/2;
   this.y = 0;
-
-  this.width = 0.9*(game.width/game.tiles);
-  this.height = 1.5*this.width;
 
   this.frameCommands = [];
   document.addEventListener("keypress", this.keyboardListener(1));
@@ -31,7 +32,7 @@ Player.initialize = function(x, game) {
 }
 
 Player.draw = function(game) {
-  game.context.fillStyle = "rgb(0,0,0)";
+  game.context.fillStyle = this.style;
   game.context.fillRect(this.x, game.height - this.height - this.y, this.width, this.height);
 }
 
