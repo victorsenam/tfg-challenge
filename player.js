@@ -19,8 +19,8 @@ Player.keyboardListener = function(value) {
 };
 
 Player.initialize = function(x, game) {
-  this.width = 0.8*(game.width/game.tiles);
-  this.height = 1.2*this.width;
+  this.width = 0.7*(game.width/game.tiles);
+  this.height = 1.3*this.width;
   this.style = "rgb(0,0,0)";
 
   this.x = x - this.width/2;
@@ -36,7 +36,23 @@ Player.draw = function(game) {
   game.context.fillRect(this.x, game.height - this.height - this.y, this.width, this.height);
 }
 
-Player.update = function(game) {
+Player.checkCollision = function(enemy) {
+  var dx = 0;
+  if (enemy.x <= this.x && enemy.x + enemy.width >= this.x)
+    dx = 1;
+  if (this.x <= enemy.x && this.x + this.width >= enemy.x)
+    dx = 1;
+
+  var dy = 0;
+  if (enemy.y <= this.y && enemy.y + enemy.height >= this.y)
+    dy = 1;
+  if (this.y <= enemy.y && this.y + this.height >= enemy.y)
+    dy = 1;
+
+  return (dx === 1 && dy === 1);
+}
+
+Player.update = function(game, enemies) {
   var keys = this.setKeys;
 
   if (keys.l)
@@ -47,4 +63,8 @@ Player.update = function(game) {
     this.y = Math.min(this.y + this.speed, Game.height - this.height);
   if (keys.d)
     this.y = Math.max(this.y - this.speed, 0);
+
+  if (enemies.some(this.checkCollision, this)) {
+    game.end();
+  }
 }

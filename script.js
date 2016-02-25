@@ -5,16 +5,23 @@ Game.run = (function() {
     maxFrameSkip = 10,
     nextGameTick = (new Date).getTime();
 
+    document.addEventListener("keypress", Game.keyboardListener);
+
     return function() {
         loops = 0;
 
-        while ((new Date).getTime() > nextGameTick) {
-            Game.update();
-            nextGameTick += skipTicks;
-            loops++;
-        }
+        if (Game.state == "End") {
+          Game.showScore();
+          Game.state = "Stopped";
+        } else if (Game.state == "Running") {
+          while ((new Date).getTime() > nextGameTick) {
+              Game.update();
+              nextGameTick += skipTicks;
+              loops++;
+          }
 
-        Game.draw();
+          Game.draw();
+        }
     };
 })();
 

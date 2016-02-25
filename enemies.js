@@ -1,8 +1,5 @@
 var Enemies = {};
 
-Enemies.list = [];
-Enemies.qt = 0;
-
 Enemies.build = function (type, tile, game) {
   var Enemy = {};
 
@@ -49,9 +46,14 @@ Enemies.build = function (type, tile, game) {
   return Enemy;
 };
 
+Enemies.initialize = function () {
+  Enemies.list = [];
+  Enemies.qt = 0;
+};
+
 Enemies.generate = function (game) {
   var tile = Math.floor(game.tiles*Math.random());
-  var rand = Math.random;
+  var rand = Math.random();
   var type = null;
 
   if (rand < 1)
