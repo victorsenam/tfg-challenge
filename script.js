@@ -10,18 +10,13 @@ Game.run = (function() {
     return function() {
         loops = 0;
 
-        if (Game.state == "End") {
-          Game.showScore();
-          Game.state = "Stopped";
-        } else if (Game.state == "Running") {
-          while ((new Date).getTime() > nextGameTick) {
-              Game.update();
-              nextGameTick += skipTicks;
-              loops++;
-          }
-
-          Game.draw();
+        while ((new Date).getTime() > nextGameTick) {
+            Game.update();
+            nextGameTick += skipTicks;
+            loops++;
         }
+
+        Game.draw();
     };
 })();
 

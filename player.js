@@ -5,15 +5,15 @@ Player.setKeys = {r:0,l:0,u:0,d:0};
 
 Player.keyboardListener = function(value) {
   return function (e) {
-    var code = e.keyCode;
+    var key = e.key;
 
-    if (code == 37)
+    if (key == "ArrowLeft" || key == "a")
       Player.setKeys.l = value;
-    else if (code == 39)
+    else if (key == "ArrowRight" || key == "d")
       Player.setKeys.r = value;
-    else if (code == 38)
+    else if (key == "ArrowUp" || key == "w")
       Player.setKeys.u = value;
-    else if (code == 40)
+    else if (key == "ArrowDown" || key == "s")
       Player.setKeys.d = value;
   };
 };
@@ -49,20 +49,42 @@ Player.checkCollision = function(enemy) {
   if (this.y <= enemy.y && this.y + this.height >= enemy.y)
     dy = 1;
 
-  return (dx === 1 && dy === 1);
+  if (dx === 1 && dy === 1) {
+    if (enemy.type === "Car") {
+      return 1;
+    } else if (enemy.type === "Oil") {
+      if (!enemy.used)
+        this.setSlide();
+      enemy.used = true;
+    }
+  }
+  return 0;
+}
+
+Player.setSlide = function () {
+  this.slide = 10;
+  this.slideDir = Math.floor(Math.random()*2)*2 - 1;
 }
 
 Player.update = function(game, enemies) {
   var keys = this.setKeys;
 
+  if (this.slide > 0) {
+    this.x += this.slideDir * this.speed * 0.75;
+    this.slide--;
+  }
+
   if (keys.l)
-    this.x = Math.max(this.x - this.speed, 0);
+    this.x = this.x - this.speed;
   if (keys.r)
-    this.x = Math.min(this.x + this.speed, Game.width - this.width);
+    this.x = this.x + this.speed;
   if (keys.u)
-    this.y = Math.min(this.y + this.speed, Game.height - this.height);
+    this.y = this.y + this.speed;
   if (keys.d)
-    this.y = Math.max(this.y - this.speed, 0);
+    this.y = this.y - this.speed;
+
+  this.x = Math.max(Math.min(this.x, game.width - this.width), 0);
+  this.y = Math.max(Math.min(this.y, game.height - this.height), 0);
 
   if (enemies.some(this.checkCollision, this)) {
     game.end();

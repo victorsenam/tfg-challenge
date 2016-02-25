@@ -3,14 +3,40 @@ var Enemies = {};
 Enemies.build = function (type, tile, game) {
   var Enemy = {};
 
-  Enemy.width = 0.8*(game.width/game.tiles);
-  Enemy.height = 1.2*Enemy.width;
-  Enemy.x = (tile+0.1)*(game.width/game.tiles);
   Enemy.y = game.height;
   Enemy.type = type;
-  Enemy.style = "rgb(200,0,0)";
   Enemy.id = this.qt++;
+  Enemy.used = false;
 
+  if (type == "Car") {
+    var style = "rgb(";
+    style += Math.floor(Math.random()*256) + ",";
+    style += Math.floor(Math.random()*256) + ",";
+    style += Math.floor(Math.random()*256) + ")";
+    Enemy.style = style;
+
+    Enemy.width = 0.8*(game.width/game.tiles);
+    Enemy.height = 1.2*Enemy.width;
+
+    Enemy.x = (tile+0.1)*(game.width/game.tiles);
+  } else if (type == "Hole") {
+    Enemy.style = "rgb(0,200,0)";
+
+    Enemy.width = 0.6*(game.width/game.tiles);
+    Enemy.height = Enemy.width;
+
+    Enemy.x = (tile+0.2)*(game.width/game.tiles);
+  } else if (type == "Oil") {
+    Enemy.style = "rgb(20,20,20)";
+
+    Enemy.width = 0.6*(game.width/game.tiles);
+    Enemy.height = Enemy.width;
+
+    Enemy.x = (tile+0.2)*(game.width/game.tiles);
+  }
+
+
+  /* METHODS */
   Enemy.draw = function (game) {
     game.context.fillStyle = this.style;
     game.context.fillRect(this.x, game.height - this.height - this.y, this.width, this.height);
@@ -19,6 +45,9 @@ Enemies.build = function (type, tile, game) {
 
   Enemy.update = function (game) {
     this.y -= game.speed;
+    
+    if (this.type == 'Car')
+      this.y -= 10;
   }
 
   // checks if enemy is still on game area
@@ -56,8 +85,10 @@ Enemies.generate = function (game) {
   var rand = Math.random();
   var type = null;
 
-  if (rand < 1)
-    type = 'car';
+  if (rand < 0.75)
+    type = "Car";
+  else if (rand < 1)
+    type = "Oil";
   // TODO: other tipes of enemies
 
   var enemy = Enemies.build(type, tile, game);
