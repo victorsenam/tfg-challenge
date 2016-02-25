@@ -29,7 +29,7 @@ Game.initialize = function () {
 
   this.speed = 10;
   this.state = "Running";
-  this.score = 1000000;
+  this.score = 0;
   this.ticks = 0;
 
   Enemies.initialize();
