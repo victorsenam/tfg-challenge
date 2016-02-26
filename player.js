@@ -1,19 +1,17 @@
 var Player = {};
 
-Player.speed = 20;
 Player.setKeys = {r:0,l:0,u:0,d:0};
 
 Player.keyboardListener = function(value) {
   return function (e) {
-    var key = e.key;
-
-    if (key == "ArrowLeft" || key == "a")
+    var key = e.code;
+    if (key == "ArrowLeft" || key == "KeyA")
       Player.setKeys.l = value;
-    else if (key == "ArrowRight" || key == "d")
+    else if (key == "ArrowRight" || key == "KeyD")
       Player.setKeys.r = value;
-    else if (key == "ArrowUp" || key == "w")
+    else if (key == "ArrowUp" || key == "KeyW")
       Player.setKeys.u = value;
-    else if (key == "ArrowDown" || key == "s")
+    else if (key == "ArrowDown" || key == "KeyS")
       Player.setKeys.d = value;
   };
 };
@@ -21,14 +19,15 @@ Player.keyboardListener = function(value) {
 Player.initialize = function(x, game) {
   this.width = 0.7*(game.width/game.tiles);
   this.height = 1.3*this.width;
-  this.style = "rgb(0,0,0)";
   this.score = 0;
+  this.slide = 0;
+  this.style = "rgb(0,0,0)";
 
   this.x = x - this.width/2;
   this.y = 0;
 
   this.frameCommands = [];
-  document.addEventListener("keypress", this.keyboardListener(1));
+  document.addEventListener("keydown", this.keyboardListener(1));
   document.addEventListener("keyup", this.keyboardListener(0));
 }
 
@@ -70,25 +69,26 @@ Player.checkCollision = function (game) {
 
 Player.setSlide = function () {
   this.slide = 10;
-  this.slideDir = Math.floor(Math.random()*2)*2 - 1;
+  this.slideDir = Math.random()*2*Math.PI;
 }
 
 Player.update = function(game, enemies) {
   var keys = this.setKeys;
 
   if (this.slide > 0) {
-    this.x += this.slideDir * this.speed * 1.25;
+    this.x += Math.sin(this.slideDir) * game.speed*1.5;
+    this.y += Math.cos(this.slideDir) * game.speed*1.5;
     this.slide--;
+  } else {
+    if (keys.l)
+      this.x = this.x - game.speed*1.2;
+    if (keys.r)
+      this.x = this.x + game.speed*1.2;
+    if (keys.u)
+      this.y = this.y + game.speed*1.2;
+    if (keys.d)
+      this.y = this.y - game.speed*1.2;
   }
-
-  if (keys.l)
-    this.x = this.x - this.speed;
-  if (keys.r)
-    this.x = this.x + this.speed;
-  if (keys.u)
-    this.y = this.y + this.speed;
-  if (keys.d)
-    this.y = this.y - this.speed;
 
   this.x = Math.max(Math.min(this.x, game.width - this.width), 0);
   this.y = Math.max(Math.min(this.y, game.height - this.height), 0);

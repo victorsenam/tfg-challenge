@@ -6,13 +6,14 @@ Game.state = "Stopped";
 Game.highScore = 0;
 
 Game.keyboardListener = function (e) {
-  var key = e.key;
+  var key = e.code;
 
-  if (key == " ") {
+  if (key == "Space") {
     if (Game.state == "Stopped")
       Game.initialize();
   }
 }
+document.addEventListener("keydown", Game.keyboardListener);
 
 Game.showScore = function () {
   this.context.fillText("Your Score: " + this.score, 10, 10);
@@ -58,7 +59,7 @@ Game.update = function () {
     Player.update(Game, Enemies.list);
 
     if (Math.random() < 0.05)
-      Enemies.generate(Game);
+      Enemies.generate(Game, Player);
 
     if ((this.ticks%90) == 0)
       this.speed++;

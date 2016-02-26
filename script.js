@@ -5,8 +5,6 @@ Game.run = (function() {
     maxFrameSkip = 10,
     nextGameTick = (new Date).getTime();
 
-    document.addEventListener("keypress", Game.keyboardListener);
-
     return function() {
         loops = 0;
 
@@ -22,7 +20,12 @@ Game.run = (function() {
 
 (function() {
     var onEachFrame;
-    if (window.webkitRequestAnimationFrame) {
+    if (window.requestAnimationFrame) {
+        onEachFrame = function(cb) {
+            var _cb = function() { cb(); requestAnimationFrame(_cb); }
+            _cb();
+        };
+    } else if (window.webkitRequestAnimationFrame) {
         onEachFrame = function(cb) {
             var _cb = function() { cb(); webkitRequestAnimationFrame(_cb); }
             _cb();
