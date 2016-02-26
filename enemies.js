@@ -77,11 +77,9 @@ Enemies.build = function (type, tile, game) {
 
       if (Math.abs(this.x - other.x) == (game.width/game.tiles)) {
         var dist = game.height - other.y;
-        console.log(dist + "to " + player.height);
-        // this should be a easily passable distance
+        // this should be an easily passable distance
         if (dist <= 1.3*(player.height + 10*player.width/game.speed))
           return 0;
-        console.log("ok");
       }
       
       return 1;

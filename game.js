@@ -1,7 +1,6 @@
 var Game = {};
 
 Game.fps = 30;
-Game.tiles = 4;
 Game.state = "Stopped";
 Game.highScore = 0;
 
@@ -9,8 +8,7 @@ Game.keyboardListener = function (e) {
   var key = e.code;
 
   if (key == "Space") {
-    if (Game.state == "Stopped")
-      Game.initialize();
+    Game.initialize();
   }
 }
 document.addEventListener("keydown", Game.keyboardListener);
@@ -24,6 +22,8 @@ Game.showScore = function () {
 Game.initialize = function () {
   this.canvas = document.getElementById("canvas");
   this.context = this.canvas.getContext("2d");
+  this.tiles = Number(document.getElementById("tiles").value);
+  this.enemyProb = Number(document.getElementById("prob").value);
 
   this.width = this.canvas.width;
   this.height = this.canvas.height;
@@ -58,7 +58,7 @@ Game.update = function () {
     Enemies.update(Game);
     Player.update(Game, Enemies.list);
 
-    if (Math.random() < 0.05)
+    if (Math.random() < Game.enemyProb)
       Enemies.generate(Game, Player);
 
     if ((this.ticks%90) == 0)
